@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Carculator.xcodeproj">
+      location = "self:/Users/leonardo.lombardi/Documents/Stanford CS 193P/Carculator/Calculator.xcodeproj">
    </FileRef>
 </Workspace>
