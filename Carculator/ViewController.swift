@@ -24,7 +24,21 @@ class ViewController: UIViewController {
             userIsAlreadyTyping = false
         }
     }
+
+    var savedProgram : CalculatorBrain.PropertyList?
     
+    @IBAction func save() {
+        savedProgram = brain.program
+    }
+    
+    @IBAction func restore() {
+        if savedProgram != nil{
+            brain.program = savedProgram!
+            displayValue = brain.result
+        }
+    }
+    
+
     @IBAction private func touchDigit(sender: UIButton) {
         let digit = sender.currentTitle!
         if userIsAlreadyTyping{
