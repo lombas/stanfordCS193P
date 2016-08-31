@@ -12,12 +12,14 @@ class ViewController: UIViewController {
 
     @IBOutlet private weak var display: UILabel!
     
+    @IBOutlet private weak var displayDescription: UILabel!
+    
     private var userIsAlreadyTyping = false
     
     private var displayValue: Double {
         get{
             return Double(display.text!)!
-            //return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+
         }
         set {
             display.text = String(newValue)
@@ -25,22 +27,32 @@ class ViewController: UIViewController {
         }
     }
 
-    var savedProgram : CalculatorBrain.PropertyList?
+//    var savedProgram : CalculatorBrain.PropertyList?
     
-    @IBAction func save() {
-        savedProgram = brain.program
+//    @IBAction func save() {
+//        savedProgram = brain.program
+//    }
+//    
+//    @IBAction func restore() {
+//        if savedProgram != nil{
+//            brain.program = savedProgram!
+//            displayValue = brain.result
+//        }
+//    }
+
+
+    @IBAction func clearEverything(sender: UIButton) {
+        display.text = "0"
+        displayDescription.text = " "
+        brain.clear()
     }
-    
-    @IBAction func restore() {
-        if savedProgram != nil{
-            brain.program = savedProgram!
-            displayValue = brain.result
-        }
-    }
-    
 
     @IBAction private func touchDigit(sender: UIButton) {
         let digit = sender.currentTitle!
+        if digit == "." && display.text!.rangeOfString(".") != nil{
+            return
+        }
+        
         if userIsAlreadyTyping{
             display.text = display.text! + digit
         }else{
@@ -50,12 +62,12 @@ class ViewController: UIViewController {
     }
     private var operandStack: Array<Double> = []
     
-    @IBAction private func enter() {
-        userIsAlreadyTyping = false
-        operandStack.append(Double(display.text!)!)
-        //operandStack.append(displayValue)
-        print("OperandStack = \(operandStack)")
-    }
+//    @IBAction private func enter() {
+//        userIsAlreadyTyping = false
+//        operandStack.append(Double(display.text!)!)
+//        //operandStack.append(displayValue)
+//        print("OperandStack = \(operandStack)")
+//    }
     
     private var brain = CalculatorBrain()
     
@@ -67,10 +79,14 @@ class ViewController: UIViewController {
         
         if let operation = sender.currentTitle{
             brain.performOperation(operation)
+            
         }
         displayValue = brain.result
-        
+        displayDescription.text = brain.description + trailingSymbol()
     }
     
+    func trailingSymbol() -> String{
+        return brain.isPartialResult ? " ..." : " ="
+    }
 }
 
