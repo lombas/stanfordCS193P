@@ -25,7 +25,7 @@ class CalculatorBrain  {
     func setOperand(operand:Double){
         acumulator = operand
         internalProgram.append(operand)
-        if description == "" {
+        if !isPartialResult {
             description = String(acumulator)
         }
     }
