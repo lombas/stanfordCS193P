@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var displayDescription: UILabel!
     
-    private var userIsAlreadyTyping = false
+    private var userIsTypingNumber = false
     
     private var displayValue: Double? {
         get{
@@ -25,28 +25,28 @@ class ViewController: UIViewController {
             if newValue == nil {
                 display.text = "0"
             } else {
-                //display.text = String(newValue!)
+                display.text = String(newValue!)
                 let formater = NSNumberFormatter()
                 formater.maximumFractionDigits = 6
                 display.text = formater.stringFromNumber(newValue!)
                 
             }
-            userIsAlreadyTyping = false
+            userIsTypingNumber = false
         }
     }
 
-//    var savedProgram : CalculatorBrain.PropertyList?
+    var savedProgram : CalculatorBrain.PropertyList?
     
-//    @IBAction func save() {
-//        savedProgram = brain.program
-//    }
-//    
-//    @IBAction func restore() {
-//        if savedProgram != nil{
-//            brain.program = savedProgram!
-//            displayValue = brain.result
-//        }
-//    }
+    @IBAction func save() {
+        savedProgram = brain.program
+    }
+    
+    @IBAction func restore() {
+        if savedProgram != nil{
+            brain.program = savedProgram!
+            displayValue = brain.result
+        }
+    }
 
 
     @IBAction func clearEverything(sender: UIButton) {
@@ -59,16 +59,17 @@ class ViewController: UIViewController {
         let digit = sender.currentTitle!
 
         
-        if userIsAlreadyTyping{
+        if userIsTypingNumber {
             if digit == "." && display.text!.rangeOfString(".") != nil{
                 return
             }
             display.text = display.text! + digit
         }else{
             display.text = digit
-            userIsAlreadyTyping = true
+            userIsTypingNumber = true
         }
     }
+    
     private var operandStack: Array<Double> = []
     
 //    @IBAction private func enter() {
@@ -79,7 +80,7 @@ class ViewController: UIViewController {
 //    }
     
     @IBAction func eraseLastEntry(sender: UIButton) {
-        if userIsAlreadyTyping {
+        if userIsTypingNumber {
             if display.text?.characters.count == 1 {
                 display.text = "0"
             } else {
@@ -91,12 +92,12 @@ class ViewController: UIViewController {
     private var brain = CalculatorBrain()
     
     @IBAction private func operate(sender: UIButton) {
-        if userIsAlreadyTyping{
+        if userIsTypingNumber {
             brain.setOperand(displayValue!)
-            userIsAlreadyTyping = false
+            userIsTypingNumber = false
         }
         
-        if let operation = sender.currentTitle{
+        if let operation = sender.currentTitle {
             brain.performOperation(operation)
             
         }

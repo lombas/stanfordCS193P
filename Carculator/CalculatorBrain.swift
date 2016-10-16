@@ -14,21 +14,25 @@ class CalculatorBrain  {
     
     private var acumulator = 0.0
     private var internalProgram = [AnyObject]()
-    private var operandAlreadyAdded = false
     var description = ""
-    var isPartialResult : Bool {
+    var isPartialResult : Bool { // The result is not complete, it's missing the second operand of the binary operation
         get{
-            return pending != nil
+            return pendingBinaryOperation != nil
         }
+    }
+    var fractionDigitFormater: NSNumberFormatter {
+        let formater = NSNumberFormatter()
+        formater.maximumFractionDigits = 6
+        formater.minimumFractionDigits = 0
+        return formater
     }
     
     func setOperand(operand:Double){
         acumulator = operand
         internalProgram.append(operand)
         if !isPartialResult {
-            let formater = NSNumberFormatter()
-            formater.maximumFractionDigits = 6
-            description = formater.stringFromNumber(acumulator)!
+            description = fractionDigitFormater.stringFromNumber(acumulator)!
+            
         }
     }
     
@@ -72,11 +76,11 @@ class CalculatorBrain  {
                 } else {
                     description = " \(symbol)"
                 }
-                operandAlreadyAdded = true
+                
             case .UnaryOperation(let function) :
+                
                 if isPartialResult {
-                    description += "\(symbol)(\(acumulator))"
-                    operandAlreadyAdded = true
+                    description += "\(symbol)(\(fractionDigitFormater.stringFromNumber(acumulator)!))"
                 }else{
                     description = "\(symbol)(\(description))"
                 }
@@ -85,32 +89,27 @@ class CalculatorBrain  {
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
                 description = "\(description) \(symbol)"
-                pending = PendingBinaryOperation(binaryFunction: function, firstOperand: acumulator)
+                pendingBinaryOperation = PendingBinaryOperation(binaryFunction: function, firstOperand: acumulator)
             case .Equals:
                 executePendingBinaryOperation()
             case .NumberCreator(let value):
                 acumulator = value
                 description += " \(symbol)"
-                operandAlreadyAdded = true
+
             }
         }
     }
     
     private func executePendingBinaryOperation(){
-        if pending != nil{
-            if !operandAlreadyAdded {
-                let formater = NSNumberFormatter()
-                formater.minimumFractionDigits = 0
-                formater.maximumFractionDigits = 6
-                description += formater.stringFromNumber(acumulator)!
-            }
-            acumulator = pending!.binaryFunction(pending!.firstOperand, acumulator)
-            pending = nil
-            operandAlreadyAdded = false
+        if isPartialResult {
+            description += " \(fractionDigitFormater.stringFromNumber(acumulator)!)"
+            acumulator = pendingBinaryOperation!.binaryFunction(pendingBinaryOperation!.firstOperand, acumulator)
+            pendingBinaryOperation = nil
+
         }
     }
     
-    private var pending : PendingBinaryOperation?
+    private var pendingBinaryOperation : PendingBinaryOperation?
     
     private struct PendingBinaryOperation{
         var binaryFunction: (Double, Double) -> Double
@@ -140,7 +139,7 @@ class CalculatorBrain  {
     func clear(){
         acumulator = 0.0
         description = ""
-        pending = nil
+        pendingBinaryOperation = nil
         internalProgram.removeAll()
     }
     
