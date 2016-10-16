@@ -26,7 +26,9 @@ class CalculatorBrain  {
         acumulator = operand
         internalProgram.append(operand)
         if !isPartialResult {
-            description = String(acumulator)
+            let formater = NSNumberFormatter()
+            formater.maximumFractionDigits = 6
+            description = formater.stringFromNumber(acumulator)!
         }
     }
     
@@ -42,7 +44,8 @@ class CalculatorBrain  {
         "=" : TypeOfOperation.Equals,
         "x²" : TypeOfOperation.UnaryOperation({pow($0, 2)}),
         "x³" : TypeOfOperation.UnaryOperation({pow($0, 3)}),
-        "1/x" : TypeOfOperation.UnaryOperation({1/$0})
+        "1/x" : TypeOfOperation.UnaryOperation({1/$0}),
+        "rand" : TypeOfOperation.NumberCreator(Double(arc4random()) /  Double(UInt32.max))
     ]
     
     private enum TypeOfOperation{
@@ -50,6 +53,7 @@ class CalculatorBrain  {
         case UnaryOperation((Double) -> Double)
         case BinaryOperation((Double, Double)-> Double)
         case Equals
+        case NumberCreator(Double)
     }
     
     func cubeRoot(base:Double) -> Double{
@@ -63,7 +67,11 @@ class CalculatorBrain  {
             switch operation {
             case .Constant(let value) :
                 acumulator = value
-                description += " \(symbol)"
+                if isPartialResult {
+                    description += " \(symbol)"
+                } else {
+                    description = " \(symbol)"
+                }
                 operandAlreadyAdded = true
             case .UnaryOperation(let function) :
                 if isPartialResult {
@@ -80,6 +88,10 @@ class CalculatorBrain  {
                 pending = PendingBinaryOperation(binaryFunction: function, firstOperand: acumulator)
             case .Equals:
                 executePendingBinaryOperation()
+            case .NumberCreator(let value):
+                acumulator = value
+                description += " \(symbol)"
+                operandAlreadyAdded = true
             }
         }
     }
@@ -87,7 +99,10 @@ class CalculatorBrain  {
     private func executePendingBinaryOperation(){
         if pending != nil{
             if !operandAlreadyAdded {
-                description += " \(acumulator)"
+                let formater = NSNumberFormatter()
+                formater.minimumFractionDigits = 0
+                formater.maximumFractionDigits = 6
+                description += formater.stringFromNumber(acumulator)!
             }
             acumulator = pending!.binaryFunction(pending!.firstOperand, acumulator)
             pending = nil

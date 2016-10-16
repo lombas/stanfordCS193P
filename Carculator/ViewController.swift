@@ -16,13 +16,21 @@ class ViewController: UIViewController {
     
     private var userIsAlreadyTyping = false
     
-    private var displayValue: Double {
+    private var displayValue: Double? {
         get{
-            return Double(display.text!)!
+            return Double(display.text!)
 
         }
         set {
-            display.text = String(newValue)
+            if newValue == nil {
+                display.text = "0"
+            } else {
+                //display.text = String(newValue!)
+                let formater = NSNumberFormatter()
+                formater.maximumFractionDigits = 6
+                display.text = formater.stringFromNumber(newValue!)
+                
+            }
             userIsAlreadyTyping = false
         }
     }
@@ -70,11 +78,21 @@ class ViewController: UIViewController {
 //        print("OperandStack = \(operandStack)")
 //    }
     
+    @IBAction func eraseLastEntry(sender: UIButton) {
+        if userIsAlreadyTyping {
+            if display.text?.characters.count == 1 {
+                display.text = "0"
+            } else {
+                display.text?.removeAtIndex(display.text!.endIndex.predecessor())
+            }
+        }
+    }
+    
     private var brain = CalculatorBrain()
     
     @IBAction private func operate(sender: UIButton) {
         if userIsAlreadyTyping{
-            brain.setOperand(displayValue)
+            brain.setOperand(displayValue!)
             userIsAlreadyTyping = false
         }
         
