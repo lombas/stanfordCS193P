@@ -32,11 +32,10 @@ class CalculatorBrain  {
         internalProgram.append(operand)
         if !isPartialResult {
             description = fractionDigitFormater.stringFromNumber(acumulator)!
-            
         }
     }
     
-    private var operations: Dictionary<String,TypeOfOperation> = [
+    private var operations: Dictionary<String, TypeOfOperation> = [
         "π": TypeOfOperation.Constant(M_PI),
         "√": TypeOfOperation.UnaryOperation(sqrt),
         "∛": TypeOfOperation.UnaryOperation({ pow($0, 1/3)}),
@@ -60,10 +59,6 @@ class CalculatorBrain  {
         case NumberCreator(Double)
     }
     
-    func cubeRoot(base:Double) -> Double{
-        return pow(base, 3)
-    }
-    
     func performOperation (symbol: String){
         internalProgram.append(symbol)
         
@@ -76,26 +71,26 @@ class CalculatorBrain  {
                 } else {
                     description = " \(symbol)"
                 }
-                
             case .UnaryOperation(let function) :
-                
                 if isPartialResult {
                     description += "\(symbol)(\(fractionDigitFormater.stringFromNumber(acumulator)!))"
                 }else{
                     description = "\(symbol)(\(description))"
                 }
-
                 acumulator = function(acumulator)
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
-                description = "\(description) \(symbol)"
+                description += " \(symbol)"
                 pendingBinaryOperation = PendingBinaryOperation(binaryFunction: function, firstOperand: acumulator)
             case .Equals:
                 executePendingBinaryOperation()
             case .NumberCreator(let value):
                 acumulator = value
-                description += " \(symbol)"
-
+                if isPartialResult {
+                    description += " \(symbol)"
+                } else {
+                    description = " \(symbol)"
+                }
             }
         }
     }
