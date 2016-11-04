@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F3A79E71DCC9AA10097DCBD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 7F3A79E61DCC9AA10097DCBD /* .gitignore */; };
 		A38A83BF1D1AB67F0092678F /* CalculatorBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38A83BE1D1AB67F0092678F /* CalculatorBrain.swift */; };
 		A3C945F51D182BEA003AA384 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C945F41D182BEA003AA384 /* AppDelegate.swift */; };
 		A3C945F71D182BEA003AA384 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C945F61D182BEA003AA384 /* ViewController.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F3A79E61DCC9AA10097DCBD /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A38A83BE1D1AB67F0092678F /* CalculatorBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorBrain.swift; sourceTree = "<group>"; };
 		A3C945F11D182BEA003AA384 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3C945F41D182BEA003AA384 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -40,6 +42,7 @@
 		A3C945E81D182BEA003AA384 = {
 			isa = PBXGroup;
 			children = (
+				7F3A79E61DCC9AA10097DCBD /* .gitignore */,
 				A3C945F31D182BEA003AA384 /* Carculator */,
 				A3C945F21D182BEA003AA384 /* Products */,
 			);
@@ -133,6 +136,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F3A79E71DCC9AA10097DCBD /* .gitignore in Resources */,
 				A3C945FF1D182BEA003AA384 /* LaunchScreen.storyboard in Resources */,
 				A3C945FC1D182BEA003AA384 /* Assets.xcassets in Resources */,
 				A3C945FA1D182BEA003AA384 /* Main.storyboard in Resources */,
