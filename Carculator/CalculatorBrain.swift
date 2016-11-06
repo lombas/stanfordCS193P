@@ -8,14 +8,13 @@
 
 import Foundation
 
-//TODO: The description display is getting cut out off screen when in landscape mode, and it's content aren't reseting after you finish a calculation and starting typing a new number.
-
 class CalculatorBrain  {
     
     private var acumulator = 0.0
     private var internalProgram = [AnyObject]()
     var description = ""
-    var isPartialResult : Bool { // The result is not complete, it's missing the second operand of the binary operation
+    var isBinaryOperationPending : Bool {
+        // The result is not complete, it's missing the second operand of the binary operation
         get{
             return pendingBinaryOperation != nil
         }
@@ -26,11 +25,13 @@ class CalculatorBrain  {
         formater.minimumFractionDigits = 0
         return formater
     }
+    var shouldEqualsAddOperand = true
     
     func setOperand(operand:Double){
         acumulator = operand
         internalProgram.append(operand)
-        if !isPartialResult {
+        if !isBinaryOperationPending {
+            // if a operation is started and there is no pending operation, than it's a fresh new operation, so reset description
             description = fractionDigitFormater.stringFromNumber(acumulator)!
         }
     }
@@ -66,28 +67,31 @@ class CalculatorBrain  {
             switch operation {
             case .Constant(let value) :
                 acumulator = value
-                if isPartialResult {
+                if isBinaryOperationPending {
                     description += " \(symbol)"
+                    shouldEqualsAddOperand = false
                 } else {
                     description = " \(symbol)"
                 }
             case .UnaryOperation(let function) :
-                if isPartialResult {
+                if isBinaryOperationPending {
                     description += "\(symbol)(\(fractionDigitFormater.stringFromNumber(acumulator)!))"
+                    shouldEqualsAddOperand = false
                 }else{
                     description = "\(symbol)(\(description))"
                 }
                 acumulator = function(acumulator)
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
-                description += " \(symbol)"
                 pendingBinaryOperation = PendingBinaryOperation(binaryFunction: function, firstOperand: acumulator)
+                description += " \(symbol)"
             case .Equals:
                 executePendingBinaryOperation()
             case .NumberCreator(let value):
                 acumulator = value
-                if isPartialResult {
+                if isBinaryOperationPending {
                     description += " \(symbol)"
+                    shouldEqualsAddOperand = false
                 } else {
                     description = " \(symbol)"
                 }
@@ -96,11 +100,13 @@ class CalculatorBrain  {
     }
     
     private func executePendingBinaryOperation(){
-        if isPartialResult {
-            description += " \(fractionDigitFormater.stringFromNumber(acumulator)!)"
+        if isBinaryOperationPending {
+            if shouldEqualsAddOperand {
+                description += " \(fractionDigitFormater.stringFromNumber(acumulator)!)"
+            }
             acumulator = pendingBinaryOperation!.binaryFunction(pendingBinaryOperation!.firstOperand, acumulator)
             pendingBinaryOperation = nil
-
+            shouldEqualsAddOperand = true
         }
     }
     

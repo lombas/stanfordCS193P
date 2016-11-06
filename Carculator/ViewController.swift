@@ -72,13 +72,6 @@ class ViewController: UIViewController {
     
     private var operandStack: Array<Double> = []
     
-//    @IBAction private func enter() {
-//        userIsAlreadyTyping = false
-//        operandStack.append(Double(display.text!)!)
-//        //operandStack.append(displayValue)
-//        print("OperandStack = \(operandStack)")
-//    }
-    
     @IBAction func eraseLastEntry(sender: UIButton) {
         if userIsTypingNumber {
             if display.text?.characters.count == 1 {
@@ -106,7 +99,7 @@ class ViewController: UIViewController {
     }
     
     func trailingSymbol() -> String{
-        return brain.isPartialResult ? " ..." : " ="
+        return brain.isBinaryOperationPending ? " ..." : " ="
     }
 }
 
