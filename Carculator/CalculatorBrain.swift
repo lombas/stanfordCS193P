@@ -27,14 +27,24 @@ class CalculatorBrain  {
     }
     var shouldEqualsAddOperand = true
     
-    func setOperand(operand:Double){
+    var variableValues = [String:Double]()
+    
+    
+    
+    func setOperand(operand:Double) {
         acumulator = operand
         internalProgram.append(operand)
         if !isBinaryOperationPending {
-            // if a operation is started and there is no pending operation, than it's a fresh new operation, so reset description
+            // if there is no pending binary operation, than it's a fresh new operation, so reset description
             description = fractionDigitFormater.stringFromNumber(acumulator)!
         }
     }
+    
+    func setOperand(operand: String) {
+        operations[operand] = TypeOfOperation.Variable({self.variableValues[operand] ?? 0.0})
+        performOperation(operand)
+    }
+    
     
     private var operations: Dictionary<String, TypeOfOperation> = [
         "π": TypeOfOperation.Constant(M_PI),
@@ -49,7 +59,7 @@ class CalculatorBrain  {
         "x²" : TypeOfOperation.UnaryOperation({pow($0, 2)}),
         "x³" : TypeOfOperation.UnaryOperation({pow($0, 3)}),
         "1/x" : TypeOfOperation.UnaryOperation({1/$0}),
-        "rand" : TypeOfOperation.NumberCreator(Double(arc4random()) /  Double(UInt32.max))
+        "rand" : TypeOfOperation.Variable({Double(arc4random()) /  Double(UInt32.max)})
     ]
     
     private enum TypeOfOperation{
@@ -57,7 +67,7 @@ class CalculatorBrain  {
         case UnaryOperation((Double) -> Double)
         case BinaryOperation((Double, Double)-> Double)
         case Equals
-        case NumberCreator(Double)
+        case Variable(() -> Double)
     }
     
     func performOperation (symbol: String){
@@ -87,8 +97,8 @@ class CalculatorBrain  {
                 description += " \(symbol)"
             case .Equals:
                 executePendingBinaryOperation()
-            case .NumberCreator(let value):
-                acumulator = value
+            case .Variable(let function):
+                acumulator = function()
                 if isBinaryOperationPending {
                     description += " \(symbol)"
                     shouldEqualsAddOperand = false

@@ -53,6 +53,7 @@ class ViewController: UIViewController {
         display.text = "0"
         displayDescription.text = " "
         brain.clear()
+        brain.variableValues.removeAll()
     }
 
     @IBAction private func touchDigit(sender: UIButton) {
@@ -64,7 +65,7 @@ class ViewController: UIViewController {
                 return
             }
             display.text = display.text! + digit
-        }else{
+        } else {
             display.text = digit
             userIsTypingNumber = true
         }
@@ -100,6 +101,18 @@ class ViewController: UIViewController {
     
     func trailingSymbol() -> String{
         return brain.isBinaryOperationPending ? " ..." : " ="
+    }
+    
+    @IBAction func setVariableValue(sender: UIButton) {
+        let variable = String(sender.currentTitle!.characters.last!)
+        brain.variableValues[variable] = displayValue!
+        brain.program = brain.program
+        displayValue = brain.result
+    }
+    
+    @IBAction func touchVariableDigit(sender: UIButton) {
+        brain.setOperand(sender.currentTitle!)
+        display.text = sender.currentTitle!
     }
 }
 

@@ -157,7 +157,7 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="biz-6R-KKI">
                                                         <rect key="frame" x="0.0" y="0.0" width="108" height="67"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                         <state key="normal" title="restore">
                                                             <color key="titleColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                                         </state>
@@ -315,10 +315,18 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggM-Cw-Rgk">
                                                         <rect key="frame" x="113" y="0.0" width="108" height="67"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                        <state key="normal" title="→M"/>
+                                                        <connections>
+                                                            <action selector="setVariableValue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5Qs-GT-mbd"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fk4-IB-sXo">
                                                         <rect key="frame" x="226" y="0.0" width="108" height="67"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                        <state key="normal" title="M"/>
+                                                        <connections>
+                                                            <action selector="touchVariableDigit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qzt-TC-ZOl"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X4A-Gg-ynr">
                                                         <rect key="frame" x="339" y="0.0" width="108" height="67"/>
