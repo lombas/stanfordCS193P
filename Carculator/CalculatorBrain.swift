@@ -29,6 +29,7 @@ class CalculatorBrain  {
     
     var variableValues = [String:Double]()
     private var lastOperationIsANumber = false
+    var operationError = false
     
     
     
@@ -74,6 +75,7 @@ class CalculatorBrain  {
     func performOperation (symbol: String){
         internalProgram.append(symbol)
         lastOperationIsANumber = false
+        operationError = false
         
         if let operation = operations[symbol]{
             switch operation {
@@ -94,6 +96,7 @@ class CalculatorBrain  {
                     description = "\(symbol)(\(description))"
                 }
                 acumulator = function(acumulator)
+                checkOperationError(acumulator)
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
                 pendingBinaryOperation = PendingBinaryOperation(binaryFunction: function, firstOperand: acumulator)
@@ -119,6 +122,7 @@ class CalculatorBrain  {
                 description += " \(fractionDigitFormater.stringFromNumber(acumulator)!)"
             }
             acumulator = pendingBinaryOperation!.binaryFunction(pendingBinaryOperation!.firstOperand, acumulator)
+            checkOperationError(acumulator)
             pendingBinaryOperation = nil
             shouldEqualsAddOperand = true
         }
@@ -179,6 +183,12 @@ class CalculatorBrain  {
     func undoLastIfANumberFunction(){
         if lastOperationIsANumber {
             undoLast()
+        }
+    }
+    
+    func checkOperationError(value: Double) {
+        if isnan(value) || isinf(value) {
+            operationError = true
         }
     }
 }

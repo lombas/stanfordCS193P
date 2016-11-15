@@ -16,6 +16,8 @@ class ViewController: UIViewController {
     
     private var userIsTypingNumber = false
     
+    private var userWantsToSeeErrors = false //User define settings to be implemented a way to change this.
+    
     private var displayValue: Double? {
         get{
             return Double(display.text!)
@@ -29,9 +31,11 @@ class ViewController: UIViewController {
                 let formater = NSNumberFormatter()
                 formater.maximumFractionDigits = 6
                 display.text = formater.stringFromNumber(newValue!)
-                
             }
             userIsTypingNumber = false
+            if !userWantsToSeeErrors && brain.operationError {
+                display.text = "Error, invalid operation"
+            }
         }
     }
 
