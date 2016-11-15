@@ -25,9 +25,10 @@ class CalculatorBrain  {
         formater.minimumFractionDigits = 0
         return formater
     }
-    var shouldEqualsAddOperand = true
+    private var shouldEqualsAddOperand = true
     
     var variableValues = [String:Double]()
+    private var lastOperationIsANumber = false
     
     
     
@@ -72,11 +73,13 @@ class CalculatorBrain  {
     
     func performOperation (symbol: String){
         internalProgram.append(symbol)
+        lastOperationIsANumber = false
         
         if let operation = operations[symbol]{
             switch operation {
             case .Constant(let value) :
                 acumulator = value
+                lastOperationIsANumber = true
                 if isBinaryOperationPending {
                     description += " \(symbol)"
                     shouldEqualsAddOperand = false
@@ -99,6 +102,7 @@ class CalculatorBrain  {
                 executePendingBinaryOperation()
             case .Variable(let function):
                 acumulator = function()
+                lastOperationIsANumber = true
                 if isBinaryOperationPending {
                     description += " \(symbol)"
                     shouldEqualsAddOperand = false
@@ -157,6 +161,24 @@ class CalculatorBrain  {
     var result: Double{
         get{
             return acumulator
+        }
+    }
+    
+    func undoLast () {
+        if internalProgram.count > 1 {
+            internalProgram.removeLast()
+        }
+    }
+    
+    func reCalculate() {
+        // Trigger a recalculation
+        let lastProgram = program
+        program = lastProgram
+    }
+    
+    func undoLastIfANumberFunction(){
+        if lastOperationIsANumber {
+            undoLast()
         }
     }
 }

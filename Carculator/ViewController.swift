@@ -73,13 +73,17 @@ class ViewController: UIViewController {
     
     private var operandStack: Array<Double> = []
     
-    @IBAction func eraseLastEntry(sender: UIButton) {
+    @IBAction func undoLast(sender: UIButton) {
         if userIsTypingNumber {
             if display.text?.characters.count == 1 {
                 display.text = "0"
             } else {
                 display.text?.removeAtIndex(display.text!.endIndex.predecessor())
             }
+        } else {
+            brain.undoLast()
+            brain.reCalculate()
+            refreshDisplays()
         }
     }
     
@@ -95,8 +99,7 @@ class ViewController: UIViewController {
             brain.performOperation(operation)
             
         }
-        displayValue = brain.result
-        displayDescription.text = brain.description + trailingSymbol()
+        refreshDisplays()
     }
     
     func trailingSymbol() -> String{
@@ -106,13 +109,19 @@ class ViewController: UIViewController {
     @IBAction func setVariableValue(sender: UIButton) {
         let variable = String(sender.currentTitle!.characters.last!)
         brain.variableValues[variable] = displayValue!
-        brain.program = brain.program
-        displayValue = brain.result
+        brain.undoLastIfANumberFunction()
+        brain.reCalculate()
+        refreshDisplays()
     }
     
     @IBAction func touchVariableDigit(sender: UIButton) {
         brain.setOperand(sender.currentTitle!)
         display.text = sender.currentTitle!
+    }
+    
+    func refreshDisplays() {
+        displayValue = brain.result
+        displayDescription.text = brain.description + trailingSymbol()
     }
 }
 

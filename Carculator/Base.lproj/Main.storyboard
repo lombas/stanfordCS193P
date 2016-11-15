@@ -90,7 +90,7 @@
                                                             <color key="titleColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                                         </state>
                                                         <connections>
-                                                            <action selector="eraseLastEntry:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JjT-Dm-yJ5"/>
+                                                            <action selector="undoLast:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZZk-EI-x0N"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
